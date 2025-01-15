@@ -13,7 +13,7 @@ app.use(cors(
 ));
 
 app.get('/', (req: any, res: { send: (arg0: string) => void; }) => {
-    res.send('GerakPeduli Backend');
+    res.send('WanCentralLab Backend');
   });
 
 app.use(compression());
