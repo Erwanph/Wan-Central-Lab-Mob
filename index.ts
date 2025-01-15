@@ -9,7 +9,9 @@ const express = require('express');
 require('dotenv').config();
 const app = express();
 app.use(cors(
-    {credentials: true}
+    {credentials: true,
+      origin: "*"
+    }
 ));
 
 app.get('/', (req: any, res: { send: (arg0: string) => void; }) => {
