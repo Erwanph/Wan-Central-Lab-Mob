@@ -22,12 +22,6 @@ app.use(bodyParser.json());
 
 const MONGODB_URI = process.env.MONGODB_URI
 
-const server = http.createServer(app);
-
-server.listen(8080, ()=> {
-  console.log("server running on http://localhost:8080")
-})
-
 mongoose.connect(MONGODB_URI);
 mongoose.connection.on('error', (error: Error)=> console.log(error));
 console.log("MONGO_URL from environment:", MONGODB_URI);
