@@ -1,0 +1,43 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon"
+  },
+  "author": "Erwan Poltak",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "body-parser": "^1.20.3",
+    "compression": "^1.7.5",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "course": "^0.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.10.0",
+    "mongoose": "^8.8.1",
+    "pg": "^8.13.1",
+    "router": "^2.0.0",
+    "typescript": "^5.6.3"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.5",
+    "@types/compression": "^1.7.5",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/lodash": "^4.17.13",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
