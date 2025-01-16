@@ -30,28 +30,25 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
         const { name } = req.body;
         const { id } = req.params;
         
-        // Log incoming request data
         console.log('Update User Request:', {
             body: req.body,
             params: req.params,
             headers: req.headers
         });
 
-        // Validate name
         if (!name) {
             console.log('Name validation failed: name is missing');
             return res.status(400).json({ message: 'Name is required' });
         }
 
-        // Log ID being queried
         console.log('Searching for user with ID:', id);
         const user = await getUserById(id);
 
-        // Check if user exists
         if (!user) {
             console.log('User not found with ID:', id);
-            return res.status(400).json({ message: 'User not found' });
+            return res.status(404).json({ message: 'User not found' });
         }
+
         console.log('Updating user:', {
             userId: id,
             currentName: user.name,
@@ -60,6 +57,7 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
 
         user.name = name;
         await user.save();
+
         console.log('User updated successfully:', user);
         return res.json(user);
     } catch (error) {
@@ -69,7 +67,7 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
             message: error instanceof Error ? error.message : 'Unknown error'
         });
         
-        return res.status(400).json({ 
+        return res.status(500).json({ 
             message: 'Failed to update user',
             error: error instanceof Error ? error.message : 'Unknown error'
         });
