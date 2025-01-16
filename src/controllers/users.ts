@@ -105,7 +105,7 @@ export const getProfile = async (req: Request, res: Response): Promise<any> => {
 export const updateScore = async (req: Request, res: Response): Promise<any> => {
     try {
         const { id } = req.params;
-        const { score } = req.body;
+        const { score } = req.body;  // score should come from the body
 
         console.log('Update Score Request:', {
             userId: id,
@@ -130,7 +130,7 @@ export const updateScore = async (req: Request, res: Response): Promise<any> => 
             newScore: score
         });
 
-        user.score = score;
+        user.score = score;  // Update the score directly from the body
         await user.save();
 
         console.log('User score updated successfully:', user);
@@ -154,10 +154,11 @@ export const updateScore = async (req: Request, res: Response): Promise<any> => 
     }
 };
 
+
 export const incrementScore = async (req: Request, res: Response): Promise<any> => {
     try {
         const { id } = req.params;
-        const { increment = 1 } = req.body; // Default increment is 1 if not specified
+        const { increment = 1 } = req.body;  // increment comes from the body, defaulting to 1 if not provided
 
         if (typeof increment !== 'number') {
             return res.status(400).json({ message: 'Increment must be a number' });
