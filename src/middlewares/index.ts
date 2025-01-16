@@ -25,11 +25,13 @@ export const isOwner = async (req: Request, res: Response, next: NextFunction): 
 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-        // Cek token di Authorization Header atau Cookies
         const authHeader = req.headers['authorization'];
         const sessionToken = authHeader && authHeader.startsWith('Bearer ')
             ? authHeader.split(' ')[1]
             : req.cookies['WANCENTRALLAB-AUTH'];
+
+        console.log('Authorization Header:', authHeader);
+        console.log('Session Token:', sessionToken);
 
         if (!sessionToken) {
             return res.status(403).json({ message: 'No session token provided' });
@@ -40,7 +42,7 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
             return res.status(403).json({ message: 'Invalid session token' });
         }
 
-        merge(req, { identity: existingUser });  // Set identity untuk isOwner
+        merge(req, { identity: existingUser });
         return next();
     } catch (error) {
         console.log(error);
