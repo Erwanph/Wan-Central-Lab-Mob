@@ -26,12 +26,12 @@ export const isOwner = async (req: Request, res: Response, next: NextFunction): 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const authHeader = req.headers['authorization'];
-        const sessionToken = authHeader && authHeader.startsWith('Bearer ')
-            ? authHeader.split(' ')[1]
+        const sessionToken = authHeader
+            ? authHeader.replace('Bearer ', '').trim()
             : req.cookies['WANCENTRALLAB-AUTH'];
 
         console.log('Authorization Header:', authHeader);
-        console.log('Session Token:', sessionToken);
+        console.log('Extracted Session Token:', sessionToken);
 
         if (!sessionToken) {
             return res.status(403).json({ message: 'No session token provided' });
@@ -49,3 +49,4 @@ export const isAuthenticated = async (req: Request, res: Response, next: NextFun
         return res.sendStatus(400);
     }
 };
+
