@@ -8,11 +8,14 @@ export const isOwner = async (req: Request, res: Response, next: NextFunction): 
         const { id } = req.params; // ID dari URL
         const currentUserId = get(req, 'identity._id') as string; // ID dari session token
 
+        console.log("ID dari URL:", id);
+        console.log("ID dari session:", currentUserId);
+
         if (!currentUserId) {
-            return res.sendStatus(400);  // Session token tidak valid
+            return res.status(400).json({ message: "Invalid session token." });
         }
 
-        if (currentUserId.toString() !== id) {
+        if (currentUserId.toString() !== id.toString()) {
             return res.status(403).json({ message: "Forbidden: You are not the owner of this account." });
         }
 
