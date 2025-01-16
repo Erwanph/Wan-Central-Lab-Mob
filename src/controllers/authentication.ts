@@ -1,7 +1,7 @@
 import express, {Request, Response} from 'express';
 import { createUser, getUserByEmail } from '../db/users';
 import { authentication, random } from '../helpers/index';
-
+import { getUserBySessionToken } from "../db/users";
 export const register = async (req: Request, res: Response) : Promise<any> => {
     try{
         const {name, email,  password} = req.body;
@@ -66,26 +66,23 @@ export const login = async (req: Request, res: Response) : Promise<any> => {
 
 export const logout = async (req: Request, res: Response): Promise<any> => {
     try {
-        // Ambil session token dari cookie
-        const sessionToken = req.cookies['WANCENTRALLAB-AUTH'];
+        // Ambil session token dari header Authorization
+        const sessionToken = req.headers['authorization']?.split(' ')[1];  // Ambil token setelah 'Bearer'
 
         if (!sessionToken) {
             return res.sendStatus(400); // Tidak ada session token ditemukan
         }
 
         // Temukan pengguna berdasarkan session token
-        const user = await getUserByEmail(req.body.email);  // Bisa diganti dengan session atau token identifier lain
+        const user = await getUserBySessionToken(sessionToken);  // Cari berdasarkan session token
 
         if (!user || user.authentication.sessionToken !== sessionToken) {
-            return res.sendStatus(403); // Unauthorized if session token doesn't match
+            return res.sendStatus(403); // Unauthorized jika session token tidak cocok
         }
 
         // Hapus session token pada pengguna di database
         user.authentication.sessionToken = null;
         await user.save();
-
-        // Hapus cookie session token
-        res.clearCookie('WANCENTRALLAB-AUTH', { domain: 'localhost', path: '/' });
 
         return res.status(200).send('Logged out successfully');
     } catch (error) {
