@@ -25,27 +25,56 @@ export const deleteUser = async (req: Request, res: Response) : Promise<any> => 
     }
 }
 
-export const updateUser = async (req: Request, res: Response) : Promise<any> => {
+export const updateUser = async (req: Request, res: Response): Promise<any> => {
     try {
-        const {name} = req.body;
-        const {id} = req.params;
-        if(!name){
-            return res.sendStatus(400);
+        const { name } = req.body;
+        const { id } = req.params;
+        
+        // Log incoming request data
+        console.log('Update User Request:', {
+            body: req.body,
+            params: req.params,
+            headers: req.headers
+        });
+
+        // Validate name
+        if (!name) {
+            console.log('Name validation failed: name is missing');
+            return res.status(400).json({ message: 'Name is required' });
         }
+
+        // Log ID being queried
+        console.log('Searching for user with ID:', id);
         const user = await getUserById(id);
 
-        if(!user){
-            return res.sendStatus(400);
+        // Check if user exists
+        if (!user) {
+            console.log('User not found with ID:', id);
+            return res.status(400).json({ message: 'User not found' });
         }
+        console.log('Updating user:', {
+            userId: id,
+            currentName: user.name,
+            newName: name
+        });
+
         user.name = name;
         await user.save();
+        console.log('User updated successfully:', user);
         return res.json(user);
-    } catch (error){
-        console.log(error);
+    } catch (error) {
+        console.error('Error in updateUser:', {
+            error: error,
+            stack: error instanceof Error ? error.stack : 'No stack trace',
+            message: error instanceof Error ? error.message : 'Unknown error'
+        });
         
-        return res.sendStatus(400);
+        return res.status(400).json({ 
+            message: 'Failed to update user',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
     }
-}
+};
 
 export const getProfile = async (req: Request, res: Response): Promise<any> => {
     try {
