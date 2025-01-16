@@ -9,6 +9,6 @@ export default (router: express.Router) => {
     router.get('/users/:id', isAuthenticated, getProfile);
     router.delete('/users/:id', isAuthenticated, isOwner, deleteUser);
     router.patch('/users/:id', isAuthenticated, isOwner,  updateUser);
-    router.patch('/users/:id', updateScore);
-    router.patch('/users/:id', incrementScore);
+    router.patch('/users/:id/score', updateScore);
+    router.patch('/users/:id/score/increment', incrementScore);
 };
