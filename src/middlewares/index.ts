@@ -23,30 +23,18 @@ export const isOwner = async (req: Request, res: Response, next: NextFunction): 
     }
 };
 
-export const isAuthenticated = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) : Promise<any> => {
     try {
-        const authHeader = req.headers['authorization'];
-        const sessionToken = authHeader
-            ? authHeader.replace('Bearer ', '').trim()
-            : req.cookies['WANCENTRALLAB-AUTH'];
-
-        console.log('Authorization Header:', authHeader);
-        console.log('Extracted Session Token:', sessionToken);
-
-        if (!sessionToken) {
-            return res.status(403).json({ message: 'No session token provided' });
-        }
-
+        const sessionToken = req.cookies['WANCENTRALLAB-AUTH'] || req.headers['authorization']?.split(' ')[1];
         const existingUser = await getUserBySessionToken(sessionToken);
         if (!existingUser) {
-            return res.status(403).json({ message: 'Invalid session token' });
+            console.log("Authentication failed: Invalid session token");
+            return res.status(403).json({ message: "Authentication failed: Invalid session token" });
         }
-
-        merge(req, { identity: existingUser });
+        merge(req, {identity: existingUser});
         return next();
     } catch (error) {
         console.log(error);
         return res.sendStatus(400);
     }
-};
-
+}
