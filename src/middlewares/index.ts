@@ -7,8 +7,8 @@ export const isOwner = async (req: Request, res: Response, next: NextFunction) :
     try {
         const {id} = req.params;
         const currentUserId = get(req, 'identity._id') as string;
-        if(!currentUserId) {
-            res.sendStatus(400);
+        if(currentUserId.toString() !== id) {
+            return res.status(403).json({ message: "Forbidden: You are not the owner of this account." });
         }
 
         if(currentUserId.toString() != id){
@@ -23,15 +23,11 @@ export const isOwner = async (req: Request, res: Response, next: NextFunction) :
 
 export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) : Promise<any> => {
     try {
-        const sessionToken = req.cookies['WANCENTRALLAB-AUTH'];
-        // if(!sessionToken){
-        //     return res.sendStatus(403);
-
-        // }
+        const sessionToken = req.cookies['WANCENTRALLAB-AUTH'] || req.headers['authorization']?.split(' ')[1];
         const existingUser = await getUserBySessionToken(sessionToken);
-        if(!existingUser){
-            console.log("test");
-            return res.sendStatus(403);
+        if (!existingUser) {
+            console.log("Authentication failed: Invalid session token");
+            return res.status(403).json({ message: "Authentication failed: Invalid session token" });
         }
         merge(req, {identity: existingUser});
         return next();
